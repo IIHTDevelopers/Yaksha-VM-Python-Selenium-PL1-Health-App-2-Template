@@ -313,7 +313,7 @@ def test_edit_tds_for_employee(setup_driver):
     if (testResult == True and verificationResult == True):
         passed = True
         test_obj.yakshaAssert("test_edit_tds_for_employee", True, "Functional")
-        print("Ttest_edit_tds_for_employee = Passed")
+        print("test_edit_tds_for_employee = Passed")
     else:
         passed = False
         test_obj.yakshaAssert("test_edit_tds_for_employee", False, "Functional")
