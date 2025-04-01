@@ -162,7 +162,7 @@ def test_add_progress_note_for_patient(setup_driver):
         print("test_add_progress_note_for_patient = Passed")
     else:
         passed = False
-        test_obj.yakshaAssert("TestValidLogin", False, "Functional")
+        test_obj.yakshaAssert("test_add_progress_note_for_patient", False, "Functional")
         print("test_add_progress_note_for_patient = Failed")
 
 @pytest.mark.order(5)
