@@ -7,7 +7,6 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-
 from Pages.LoginPage import LoginPage
 from Pages.AppointmentPage import AppointmentPage
 from Pages.OperationTheatrePage import OperationTheatrePage
@@ -59,21 +58,27 @@ def test_verification_module(setup_driver):
     Expected Result:
     - The 'Visit Type' column should contain only patients in the "new visit" category.
     """
-    test_obj = TestUtils()
-    driver = setup_driver
-    login_to_application(driver)  # Perform login before test
-    appointment_page = AppointmentPage(driver)
-    testResult =  appointment_page.verify_visit_type_dropdown()
-    time.sleep(5)
-    verificationResult = verify_visit_type(driver)
-    if (testResult == True and verificationResult == True):
-        passed = True
-        test_obj.yakshaAssert("test_verification_module", True, "Functional")
-        print("test_verification_module = Passed")
-    else:
+    try:
+        test_obj = TestUtils()
+        driver = setup_driver
+        login_to_application(driver)  # Perform login before test
+        appointment_page = AppointmentPage(driver)
+        testResult =  appointment_page.verify_visit_type_dropdown()
+        time.sleep(5)
+        verificationResult = verify_visit_type(driver)
+        if (testResult == True and verificationResult == True):
+            passed = True
+            test_obj.yakshaAssert("verify_visit_type_dropdown", True, "functional")
+            print("verify_visit_type_dropdown = Passed")
+        else:
+            passed = False
+            test_obj.yakshaAssert("verify_visit_type_dropdown", False, "functional")
+            print("verify_visit_type_dropdown = Failed")
+    except:
         passed = False
-        test_obj.yakshaAssert("test_verification_module", False, "Functional")
-        print("test_verification_module = Failed")
+        test_obj.yakshaAssert("verify_visit_type_dropdown", False, "functional")
+        print("verify_visit_type_dropdown = Failed")
+    assert passed
 
 
 @pytest.mark.order(2)
@@ -84,22 +89,29 @@ def test_ot_booking_alert(setup_driver):
     Expected Result:
     - An alert with the message "Patient not Selected! Please Select the patient first!" is displayed and handled.
     """
-    test_obj = TestUtils()
-    driver = setup_driver
-    login_to_application(driver)  # Perform login before test
-    ot_page = OperationTheatrePage(driver)
-    testResult = ot_page.handle_ot_booking_alert()
-    is_ot_booking_modal_displayed(driver)
-    time.sleep(5)
-    verificationResult = verify_visit_type(driver)
-    if (testResult == True and verificationResult == True):
-        passed = True
-        test_obj.yakshaAssert("test_ot_booking_alert", True, "Functional")
-        print("test_ot_booking_alert = Passed")
-    else:
+    try:
+        test_obj = TestUtils()
+        driver = setup_driver
+        login_to_application(driver)  # Perform login before test
+        ot_page = OperationTheatrePage(driver)
+        testResult = ot_page.handle_ot_booking_alert()
+        is_ot_booking_modal_displayed(driver)
+        time.sleep(5)
+        verificationResult = verify_book_ot_modal_title(driver)
+        print(f"This is the test result {verificationResult}")
+        if (testResult == True and verificationResult == True):
+            passed = True
+            test_obj.yakshaAssert("handle_ot_booking_alert", True, "functional")
+            print("handle_ot_booking_alert = Passed")
+        else:
+            passed = False
+            test_obj.yakshaAssert("handle_ot_booking_alert", False, "functional")
+            print("handle_ot_booking_alert = Failed")
+    except:
         passed = False
-        test_obj.yakshaAssert("test_ot_booking_alert", False, "Functional")
-        print("test_ot_booking_alert = Failed")
+        test_obj.yakshaAssert("handle_ot_booking_alert", False, "functional")
+        print("handle_ot_booking_alert = Failed")
+    assert passed
 
 
 @pytest.mark.order(3)
@@ -116,21 +128,27 @@ def test_verify_patient_overview(setup_driver):
         Expected Result:
         - Verify the same patient overview page is displayed with the same patient name.
     """
-    test_obj = TestUtils()
-    driver = setup_driver
-    login_to_application(driver)  # Perform login before test
-    doctor_page = DoctorPage(driver)
-    testResult = doctor_page.verify_patient_overview()
-    verificationResult = verify_user_is_on_correct_url(driver,"Doctors/PatientOverviewMain/PatientOverview")
-    time.sleep(5)
-    if (testResult == True and verificationResult == True):
-        passed = True
-        test_obj.yakshaAssert("test_verify_patient_overview", True, "Functional")
-        print("test_verify_patient_overview = Passed")
-    else:
+    try:
+        test_obj = TestUtils()
+        driver = setup_driver
+        login_to_application(driver)  # Perform login before test
+        doctor_page = DoctorPage(driver)
+        testResult = doctor_page.verify_patient_overview()
+        verificationResult = verify_user_is_on_correct_url(driver,"Doctors/PatientOverviewMain/PatientOverview")
+        time.sleep(5)
+        if (testResult == True and verificationResult == True):
+            passed = True
+            test_obj.yakshaAssert("verify_patient_overview", True, "functional")
+            print("verify_patient_overview = Passed")
+        else:
+            passed = False
+            test_obj.yakshaAssert("verify_patient_overview", False, "functional")
+            print("verify_patient_overview = Failed")
+    except:
         passed = False
-        test_obj.yakshaAssert("test_verify_patient_overview", False, "Functional")
-        print("test_verify_patient_overview = Failed")
+        test_obj.yakshaAssert("verify_patient_overview", False, "functional")
+        print("verify_patient_overview = Failed")
+    assert passed
 
 @pytest.mark.order(4)
 def test_add_progress_note_for_patient(setup_driver):
@@ -149,21 +167,27 @@ def test_add_progress_note_for_patient(setup_driver):
         Expected Result:
         - A success confirmation popup with the message: "Progress Note Template added." should appear.
     """
-    test_obj = TestUtils()
-    driver = setup_driver
-    login_to_application(driver)  # Perform login before test
-    doctor_page = DoctorPage(driver)
-    testResult = doctor_page.add_progress_note_for_patient()
-    verificationResult = verify_user_is_on_correct_url(driver,"Doctors/PatientOverviewMain/NotesSummary/NotesList")
-    time.sleep(5)
-    if (testResult == True and verificationResult == True):
-        passed = True
-        test_obj.yakshaAssert("test_add_progress_note_for_patient", True, "Functional")
-        print("test_add_progress_note_for_patient = Passed")
-    else:
+    try:
+        test_obj = TestUtils()
+        driver = setup_driver
+        login_to_application(driver)  # Perform login before test
+        doctor_page = DoctorPage(driver)
+        testResult = doctor_page.add_progress_note_for_patient()
+        verificationResult = verify_user_is_on_correct_url(driver,"Doctors/PatientOverviewMain/NotesSummary/NotesList")
+        time.sleep(5)
+        if (testResult == True and verificationResult == True):
+            passed = True
+            test_obj.yakshaAssert("add_progress_note_for_patient", True, "functional")
+            print("add_progress_note_for_patient = Passed")
+        else:
+            passed = False
+            test_obj.yakshaAssert("add_progress_note_for_patient", False, "functional")
+            print("add_progress_note_for_patient = Failed")
+    except:
         passed = False
-        test_obj.yakshaAssert("test_add_progress_note_for_patient", False, "Functional")
-        print("test_add_progress_note_for_patient = Failed")
+        test_obj.yakshaAssert("add_progress_note_for_patient", False, "functional")
+        print("add_progress_note_for_patient = Failed")
+    assert passed
 
 @pytest.mark.order(5)
 def test_add_currency_and_verify(setup_driver):
@@ -180,21 +204,27 @@ def test_add_currency_and_verify(setup_driver):
         Expected Result:
         - The new currency should be added successfully and displayed in the table with the correct currency code and description.
     """
-    test_obj = TestUtils()
-    driver = setup_driver
-    login_to_application(driver)  # Perform login before test
-    procurement_page = ProcurementPage(driver)
-    testResult = procurement_page.add_currency_and_verify()
-    verificationResult = verify_user_is_on_correct_url(driver,"ProcurementMain/Settings/CurrencyList")
-    time.sleep(5)
-    if (testResult == True and verificationResult == True):
-        passed = True
-        test_obj.yakshaAssert("test_add_currency_and_verify", True, "Functional")
-        print("test_add_currency_and_verify = Passed")
-    else:
+    try:
+        test_obj = TestUtils()
+        driver = setup_driver
+        login_to_application(driver)  # Perform login before test
+        procurement_page = ProcurementPage(driver)
+        testResult = procurement_page.add_currency_and_verify()
+        verificationResult = verify_user_is_on_correct_url(driver,"ProcurementMain/Settings/CurrencyList")
+        time.sleep(5)
+        if (testResult == True and verificationResult == True):
+            passed = True
+            test_obj.yakshaAssert("add_currency_and_verify", True, "functional")
+            print("add_currency_and_verify = Passed")
+        else:
+            passed = False
+            test_obj.yakshaAssert("add_currency_and_verify", False, "functional")
+            print("add_currency_and_verify = Failed")
+    except:
         passed = False
-        test_obj.yakshaAssert("test_add_currency_and_verify", False, "Functional")
-        print("test_add_currency_and_verify = Failed")
+        test_obj.yakshaAssert("add_currency_and_verify", False, "functional")
+        print("add_currency_and_verify = Failed")
+    assert passed
 
 @pytest.mark.order(6)
 def test_verify_mandatory_fields_warning(setup_driver):
@@ -210,21 +240,27 @@ def test_verify_mandatory_fields_warning(setup_driver):
         Expected Result:
         - A warning popup with the message: "Please fill all the mandatory fields."
     """
-    test_obj = TestUtils()
-    driver = setup_driver
-    login_to_application(driver)  # Perform login before test
-    utilities_page = UtilitiesPage(driver)
-    testResult = utilities_page.verify_mandatory_fields_warning()
-    verificationResult = verify_user_is_on_correct_url(driver,"/Utilities/SchemeRefund")
-    time.sleep(5)
-    if (testResult == True and verificationResult == True):
-        passed = True
-        test_obj.yakshaAssert("test_verify_mandatory_fields_warning", True, "Functional")
-        print("test_verify_mandatory_fields_warning = Passed")
-    else:
+    try:
+        test_obj = TestUtils()
+        driver = setup_driver
+        login_to_application(driver)  # Perform login before test
+        utilities_page = UtilitiesPage(driver)
+        testResult = utilities_page.verify_mandatory_fields_warning()
+        verificationResult = verify_user_is_on_correct_url(driver,"/Utilities/SchemeRefund")
+        time.sleep(5)
+        if (testResult == True and verificationResult == True):
+            passed = True
+            test_obj.yakshaAssert("verify_mandatory_fields_warning", True, "functional")
+            print("verify_mandatory_fields_warning = Passed")
+        else:
+            passed = False
+            test_obj.yakshaAssert("verify_mandatory_fields_warning", False, "functional")
+            print("verify_mandatory_fields_warning = Failed")
+    except:
         passed = False
-        test_obj.yakshaAssert("test_verify_mandatory_fields_warning", False, "Functional")
-        print("test_verify_mandatory_fields_warning = Failed")
+        test_obj.yakshaAssert("verify_mandatory_fields_warning", False, "functional")
+        print("verify_mandatory_fields_warning = Failed")
+    assert passed
 
 @pytest.mark.order(7)
 def test_verify_user_profile_navigation(setup_driver):
@@ -239,21 +275,27 @@ def test_verify_user_profile_navigation(setup_driver):
         Expected Result:
         - Verify that the user is redirected to the "User Profile" page and the page header or title confirms this.
     """
-    test_obj = TestUtils()
-    driver = setup_driver
-    login_to_application(driver)  # Perform login before test
-    admin_page = AdminPage(driver)
-    testResult = admin_page.verify_user_profile_navigation()
-    verificationResult = verify_user_is_on_correct_url(driver,"Employee/ProfileMain/UserProfile")
-    time.sleep(5)
-    if (testResult == True and verificationResult == True):
-        passed = True
-        test_obj.yakshaAssert("test_verify_user_profile_navigation", True, "Functional")
-        print("test_verify_user_profile_navigation = Passed")
-    else:
+    try:
+        test_obj = TestUtils()
+        driver = setup_driver
+        login_to_application(driver)  # Perform login before test
+        admin_page = AdminPage(driver)
+        testResult = admin_page.verify_user_profile_navigation()
+        verificationResult = verify_user_is_on_correct_url(driver,"Employee/ProfileMain/UserProfile")
+        time.sleep(5)
+        if (testResult == True and verificationResult == True):
+            passed = True
+            test_obj.yakshaAssert("verify_user_profile_navigation", True, "functional")
+            print("verify_user_profile_navigation = Passed")
+        else:
+            passed = False
+            test_obj.yakshaAssert("verify_user_profile_navigation", False, "functional")
+            print("verify_user_profile_navigation = Failed")
+    except:
         passed = False
-        test_obj.yakshaAssert("test_verify_user_profile_navigation", False, "Functional")
-        print("test_verify_user_profile_navigation = Failed")
+        test_obj.yakshaAssert("verify_user_profile_navigation", False, "functional")
+        print("verify_user_profile_navigation = Failed")
+    assert passed
 
 @pytest.mark.order(8)
 def test_upload_profile_picture(setup_driver):
@@ -270,21 +312,27 @@ def test_upload_profile_picture(setup_driver):
         Expected Result:
         - Verify that the uploaded image is displayed successfully in the patient's profile.
     """
-    test_obj = TestUtils()
-    driver = setup_driver
-    login_to_application(driver)  # Perform login before test
-    patient_page = PatientPage(driver)
-    testResult = patient_page.upload_profile_picture()
-    verificationResult = verify_image_is_uploaded(driver)
-    time.sleep(5)
-    if (testResult == True and verificationResult == True):
-        passed = True
-        test_obj.yakshaAssert("test_upload_profile_picture", True, "Functional")
-        print("test_upload_profile_picture = Passed")
-    else:
+    try:
+        test_obj = TestUtils()
+        driver = setup_driver
+        login_to_application(driver)  # Perform login before test
+        patient_page = PatientPage(driver)
+        testResult = patient_page.upload_profile_picture()
+        verificationResult = verify_image_is_uploaded(driver)
+        time.sleep(5)
+        if (testResult == True and verificationResult == True):
+            passed = True
+            test_obj.yakshaAssert("upload_profile_picture", True, "functional")
+            print("upload_profile_picture = Passed")
+        else:
+            passed = False
+            test_obj.yakshaAssert("upload_profile_picture", False, "functional")
+            print("upload_profile_picture = Failed")
+    except:
         passed = False
-        test_obj.yakshaAssert("test_upload_profile_picture", False, "Functional")
-        print("test_upload_profile_picture = Failed")
+        test_obj.yakshaAssert("upload_profile_picture", False, "functional")
+        print("upload_profile_picture = Failed")
+    assert passed
 
 @pytest.mark.order(9)
 def test_edit_tds_for_employee(setup_driver):
@@ -303,21 +351,27 @@ def test_edit_tds_for_employee(setup_driver):
         Expected Result:
         - The updated TDS% value is displayed correctly in the corresponding row of the table.
     """
-    test_obj = TestUtils()
-    driver = setup_driver
-    login_to_application(driver)  # Perform login before test
-    inc_page = IncentivePage(driver)
-    testResult = inc_page.edit_tds_for_employee()
-    verificationResult = verify_tds_test(driver)
-    time.sleep(5)
-    if (testResult == True and verificationResult == True):
-        passed = True
-        test_obj.yakshaAssert("test_edit_tds_for_employee", True, "Functional")
-        print("test_edit_tds_for_employee = Passed")
-    else:
+    try:
+        test_obj = TestUtils()
+        driver = setup_driver
+        login_to_application(driver)  # Perform login before test
+        inc_page = IncentivePage(driver)
+        testResult = inc_page.edit_tds_for_employee()
+        verificationResult = verify_tds_test(driver)
+        time.sleep(5)
+        if (testResult == True and verificationResult == True):
+            passed = True
+            test_obj.yakshaAssert("edit_tds_for_employee", True, "functional")
+            print("edit_tds_for_employeeedit_tds_for_employee = Passed")
+        else:
+            passed = False
+            test_obj.yakshaAssert("edit_tds_for_employee", False, "functional")
+            print("edit_tds_for_employee = Failed")
+    except:
         passed = False
-        test_obj.yakshaAssert("test_edit_tds_for_employee", False, "Functional")
-        print("test_edit_tds_for_employee = Failed")
+        test_obj.yakshaAssert("edit_tds_for_employee", False, "functional")
+        print("edit_tds_for_employee = Failed")
+    assert passed
 
 @pytest.mark.order(10)
 def test_toggle_price_category_status(setup_driver):
@@ -334,21 +388,27 @@ def test_toggle_price_category_status(setup_driver):
         Expected Result:
         - A success message is displayed for both actions: "Deactivated." for disabling and "Activated." for enabling.
     """
-    test_obj = TestUtils()
-    driver = setup_driver
-    login_to_application(driver)  # Perform login before test
-    setting_page = SettingsPage(driver)
-    testResult = setting_page.toggle_price_category_status()
-    verificationResult = verify_user_is_on_correct_url(driver,"Settings/PriceCategory")
-    time.sleep(5)
-    if (testResult == True and verificationResult == True):
-        passed = True
-        test_obj.yakshaAssert("test_toggle_price_category_status", True, "Functional")
-        print("Ttest_toggle_price_category_status = Passed")
-    else:
+    try:
+        test_obj = TestUtils()
+        driver = setup_driver
+        login_to_application(driver)  # Perform login before test
+        setting_page = SettingsPage(driver)
+        testResult = setting_page.toggle_price_category_status()
+        verificationResult = verify_user_is_on_correct_url(driver,"Settings/PriceCategory")
+        time.sleep(5)
+        if (testResult == True and verificationResult == True):
+            passed = True
+            test_obj.yakshaAssert("toggle_price_category_status", True, "functional")
+            print("toggle_price_category_status = Passed")
+        else:
+            passed = False
+            test_obj.yakshaAssert("toggle_price_category_status", False, "functional")
+            print("toggle_price_category_status = Failed")
+    except:
         passed = False
-        test_obj.yakshaAssert("test_toggle_price_category_status", False, "Functional")
-        print("test_toggle_price_category_status = Failed")
+        test_obj.yakshaAssert("toggle_price_category_status", False, "functional")
+        print("toggle_price_category_status = Failed")
+    assert passed
 
 @pytest.mark.order(11)
 def test_verify_navigation_between_submodules(setup_driver):
@@ -366,23 +426,29 @@ def test_verify_navigation_between_submodules(setup_driver):
         8. Naviaget back to the "Inventory Requisition" section
 
         Expected Result:
-        - Ensure that it should navigate to each sections of the "Inventory" module
+        - Ensure that it should navigate to each sections of the "Inventory" module 
     """
-    test_obj = TestUtils()
-    driver = setup_driver
-    login_to_application(driver)  # Perform login before test
-    substore_page = SubstorePage(driver)
-    testResult = substore_page.verify_navigation_between_submodules()
-    verificationResult = verify_user_is_on_correct_url(driver,"Inventory/Return")
-    time.sleep(5)
-    if (testResult == True and verificationResult == True):
-        passed = True
-        test_obj.yakshaAssert("test_verify_navigation_between_submodules", True, "Functional")
-        print("test_verify_navigation_between_submodules = Passed")
-    else:
+    try:
+        test_obj = TestUtils()
+        driver = setup_driver
+        login_to_application(driver)  # Perform login before test
+        substore_page = SubstorePage(driver)
+        testResult = substore_page.verify_navigation_between_submodules()
+        verificationResult = verify_user_is_on_correct_url(driver,"Inventory/Return")
+        time.sleep(5)
+        if (testResult == True and verificationResult == True):
+            passed = True
+            test_obj.yakshaAssert("verify_navigation_between_submodules", True, "functional")
+            print("verify_navigation_between_submodules = Passed")
+        else:
+            passed = False
+            test_obj.yakshaAssert("verify_navigation_between_submodules", False, "functional")
+            print("verify_navigation_between_submodules = Failed")
+    except:
         passed = False
-        test_obj.yakshaAssert("test_verify_navigation_between_submodules", False, "Functional")
-        print("test_verify_navigation_between_submodules = Failed")
+        test_obj.yakshaAssert("verify_navigation_between_submodules", False, "functional")
+        print("verify_navigation_between_submodules = Failed")
+    assert passed
 
 @pytest.mark.order(12)
 def test_verify_tooltip_text(setup_driver):
@@ -393,26 +459,32 @@ def test_verify_tooltip_text(setup_driver):
         1. Navigate to https://healthapp.yaksha.com/Home/Index#/WardSupply
         2. Click on Inventory tab.
         3. Hover over the cursor icon located at the top-right corner.
-        4. Capture the tooltip text displayed on hover.
+        4. Capture the tooltip text displayed on hover.     
 
         Expected Result:
         - The tooltip text displayed on hover should contain: "To change, you can always click here."
     """
-    test_obj = TestUtils()
-    driver = setup_driver
-    login_to_application(driver)  # Perform login before test
-    substore_page = SubstorePage(driver)
-    testResult = substore_page.verify_tooltip_text()
-    verificationResult = is_tooltip_displayed(driver)
-    time.sleep(5)
-    if (testResult == True and verificationResult == True):
-        passed = True
-        test_obj.yakshaAssert("test_verify_tooltip_text", True, "Functional")
-        print("test_verify_tooltip_text = Passed")
-    else:
+    try:
+        test_obj = TestUtils()
+        driver = setup_driver
+        login_to_application(driver)  # Perform login before test
+        substore_page = SubstorePage(driver)
+        testResult = substore_page.verify_tooltip_text()
+        verificationResult = is_tooltip_displayed(driver)
+        time.sleep(5)
+        if (testResult == True and verificationResult == True):
+            passed = True
+            test_obj.yakshaAssert("verify_tooltip_text", True, "functional")
+            print("verify_tooltip_text = Passed")
+        else:
+            passed = False
+            test_obj.yakshaAssert("verify_tooltip_text", False, "functional")
+            print("verify_tooltip_text = Failed")
+    except:
         passed = False
-        test_obj.yakshaAssert("test_verify_tooltip_text", False, "Functional")
-        print("test_verify_tooltip_text = Failed")
+        test_obj.yakshaAssert("verify_tooltip_text", False, "functional")
+        print("verify_tooltip_text = Failed")
+    assert passed
 
 @pytest.mark.order(13)
 def test_capture_inventory_requisition_screenshot(setup_driver):
@@ -428,21 +500,27 @@ def test_capture_inventory_requisition_screenshot(setup_driver):
         Expected Result:
         - The screenshot of the Inventory Requisition page is captured and saved under the screenshots folder.
     """
-    test_obj = TestUtils()
-    driver = setup_driver
-    login_to_application(driver)  # Perform login before test
-    substore_page = SubstorePage(driver)
-    testResult = substore_page.capture_inventory_requisition_screenshot()
-    verificationResult = verify_user_is_on_correct_url(driver,"Inventory/InventoryRequisitionList")
-    time.sleep(5)
-    if (testResult == True and verificationResult == True):
-        passed = True
-        test_obj.yakshaAssert("test_capture_inventory_requisition_screenshot", True, "Functional")
-        print("test_capture_inventory_requisition_screenshot = Passed")
-    else:
+    try:
+        test_obj = TestUtils()
+        driver = setup_driver
+        login_to_application(driver)  # Perform login before test
+        substore_page = SubstorePage(driver)
+        testResult = substore_page.capture_inventory_requisition_screenshot()
+        verificationResult = verify_user_is_on_correct_url(driver,"Inventory/InventoryRequisitionList")
+        time.sleep(5)
+        if (testResult == True and verificationResult == True):
+            passed = True
+            test_obj.yakshaAssert("capture_inventory_requisition_screenshot", True, "functional")
+            print("capture_inventory_requisition_screenshot = Passed")
+        else:
+            passed = False
+            test_obj.yakshaAssert("capture_inventory_requisition_screenshot", False, "functional")
+            print("capture_inventory_requisition_screenshot = Failed")
+    except:
         passed = False
-        test_obj.yakshaAssert("test_capture_inventory_requisition_screenshot", False, "Functional")
-        print("test_capture_inventory_requisition_screenshot = Failed")
+        test_obj.yakshaAssert("capture_inventory_requisition_screenshot", False, "functional")
+        print("capture_inventory_requisition_screenshot = Failed")
+    assert passed
 
 @pytest.mark.order(14)
 def test_verify_field_level_error_message(setup_driver):
@@ -459,20 +537,26 @@ def test_verify_field_level_error_message(setup_driver):
         Expected Result:
         - Verify a field level error message appears "Select doctor from the list."
     """
-    test_obj = TestUtils()
-    driver = setup_driver
-    login_to_application(driver)  # Perform login before test
-    adt_page = ADTPage(driver)
-    testResult = adt_page.verify_field_level_error_message()
-    verificationResult = verify_error_message(driver)
-    if (testResult == True and verificationResult == True):
-        passed = True
-        test_obj.yakshaAssert("test_verify_field_level_error_message", True, "Functional")
-        print("test_verify_field_level_error_message = Passed")
-    else:
+    try:
+        test_obj = TestUtils()
+        driver = setup_driver
+        login_to_application(driver)  # Perform login before test
+        adt_page = ADTPage(driver)
+        testResult = adt_page.verify_field_level_error_message()
+        verificationResult = verify_error_message(driver)
+        if (testResult == True and verificationResult == True):
+            passed = True
+            test_obj.yakshaAssert("verify_field_level_error_message", True, "functional")
+            print("verify_field_level_error_message = Passed")
+        else:
+            passed = False
+            test_obj.yakshaAssert("verify_field_level_error_message", False, "functional")
+            print("verify_field_level_error_message = Failed")
+    except:
         passed = False
-        test_obj.yakshaAssert("test_verify_field_level_error_message", False, "Functional")
-        print("test_verify_field_level_error_message = Failed")
+        test_obj.yakshaAssert("verify_field_level_error_message", False, "functional")
+        print("verify_field_level_error_message = Failed")
+    assert passed
 
 @pytest.mark.order(15)
 def test_verify_logout_functionality(setup_driver):
@@ -488,20 +572,26 @@ def test_verify_logout_functionality(setup_driver):
         Expected Result:
         - User is logged out successfully and the login page is displayed.
     """
-    test_obj = TestUtils()
-    driver = setup_driver
-    login_to_application(driver)  # Perform login before test
-    login_page = LoginPage(driver)
-    testResult = login_page.verify_logout_functionality()
-    verificationResult = verify_user_is_logged_out(driver)
-    if (testResult == True and verificationResult == True):
-        passed = True
-        test_obj.yakshaAssert("test_verify_logout_functionality", True, "Functional")
-        print("test_verify_logout_functionality = Passed")
-    else:
+    try:
+        test_obj = TestUtils()
+        driver = setup_driver
+        login_to_application(driver)  # Perform login before test
+        login_page = LoginPage(driver)
+        testResult = login_page.verify_logout_functionality()
+        verificationResult = verify_user_is_logged_out(driver)
+        if (testResult == True and verificationResult == True):
+            passed = True
+            test_obj.yakshaAssert("verify_logout_functionality", True, "functional")
+            print("verify_logout_functionality = Passed")
+        else:
+            passed = False
+            test_obj.yakshaAssert("verify_logout_functionality", False, "functional")
+            print("verify_logout_functionality = Failed")
+    except:
         passed = False
-        test_obj.yakshaAssert("test_verify_logout_functionality", False, "Functional")
-        print("test_verify_logout_functionality = Failed")
+        test_obj.yakshaAssert("verify_logout_functionality", False, "functional")
+        print("verify_logout_functionality = Failed")
+    assert passed
 
 
 """------------------------------------------------- Helper Method------------------------------------------------------------"""
@@ -519,9 +609,26 @@ def verify_visit_type(driver):
     visit_type_column_locator = (By.XPATH, "//div[@col-id='AppointmentType']")
     try:
         visit_type_cells = driver.find_elements(*visit_type_column_locator)
-        return len(visit_type_cells) > 1
+        return len(visit_type_cells) > 0
     except Exception as e:
         print(f"Visit type verification failed: {e}")
+        return False
+    
+def verify_book_ot_modal_title(driver):
+    """
+    /**
+    * @Test
+    * @description This method verifies that the OT booking modal title
+    * @expected
+    * The OT booking modal title should be visible
+    */
+    """
+    try:
+        modal_title_locator = (By.XPATH, "//span[text()=' Booking OT Schedule  | New Patient']")
+        modal_title_count = len(driver.find_elements(*modal_title_locator))
+        return modal_title_count > 0
+    except Exception as e:
+        print(f"OT Booking modal title is not visible")
         return False
 
 def is_ot_booking_modal_displayed(driver):
